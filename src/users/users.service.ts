@@ -18,8 +18,8 @@ export class UsersService {
     return await this.usersRepository.findOne(id);
   }
 
-  async remove(id: string): Promise<void> {
-    await this.usersRepository.delete(id);
+  async remove(id: number): Promise<void> {
+    await this.usersRepository.softDelete(id);
   }
 
   async create(params): Promise<Users> {

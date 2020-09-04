@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { ListUsersQuery } from '../queries/list.query';
-import { CommandHandler, ICommandHandler, IQueryHandler } from '@nestjs/cqrs';
+import { CommandHandler, IQueryHandler } from '@nestjs/cqrs';
 import { Users } from '../entities/user.entity';
 import { UsersService } from '../users.service';
 

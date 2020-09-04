@@ -20,7 +20,6 @@ export class ListHandler implements IQueryHandler<ListUsersQuery> {
     // to that Query and return the request information
     // such as a service method call
     const users = await this.usersService.findAll();
-    console.log(users);
     return users;
   }
 }

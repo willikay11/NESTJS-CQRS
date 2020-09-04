@@ -1,8 +1,9 @@
-import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ListUsersQuery } from './queries/list.query';
 import { GetUserByIdQuery } from './queries/getById.query';
 import { AddUserCommand } from './commands/addUser.command';
+import { DeleteUserCommand } from './commands/deleteUser.command';
 
 @Controller('api')
 export class UserController {
@@ -50,6 +51,20 @@ export class UserController {
     response.status(HttpStatus.CREATED).json({
       message: 'Created!',
       user: user
+    });
+  }
+
+  @Delete('/user/:id')
+  public async deleteUser(
+    @Param() param: DeleteUserCommand,
+    @Res() response
+  ) {
+    const user = await this.commandBus.execute(
+      new DeleteUserCommand(param.id)
+    )
+
+    response.status(HttpStatus.OK).json({
+      message: 'User deleted!'
     });
   }
 }

@@ -1,7 +1,8 @@
-import { Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ListUsersQuery } from './queries/list.query';
 import { GetUserByIdQuery } from './queries/getById.query';
+import { AddUserCommand } from './commands/addUser.command';
 
 @Controller('api')
 export class UserController {
@@ -35,5 +36,20 @@ export class UserController {
     );
 
     response.status(HttpStatus.OK).json(user);
+  }
+
+  @Post('/user')
+  public async createUser(
+    @Body() body: AddUserCommand,
+    @Res() response
+  ) {
+    const user = await this.commandBus.execute(
+      new AddUserCommand(body.firstName, body.lastName, body.email, body.phone)
+    );
+
+    response.status(HttpStatus.CREATED).json({
+      message: 'Created!',
+      user: user
+    });
   }
 }

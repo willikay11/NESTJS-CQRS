@@ -5,6 +5,7 @@ import { UsersService } from './users.service';
 import { UserController } from './users.controller';
 import { Users } from './entities/user.entity';
 import { QueryHandlers } from './queries';
+import { CommandHandlers } from './commands';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { QueryHandlers } from './queries';
   ],
   providers: [
     ...QueryHandlers,
+    ...CommandHandlers,
     UsersService
   ],
   controllers: [UserController],

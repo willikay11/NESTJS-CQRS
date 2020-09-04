@@ -1,6 +1,4 @@
 import { CommandHandler, IQueryHandler } from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Users } from '../entities/user.entity';
 import { DeleteResult, Repository } from 'typeorm';
 import { UsersService } from '../users.service';
 

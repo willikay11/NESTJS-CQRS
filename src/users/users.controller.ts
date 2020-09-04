@@ -1,9 +1,10 @@
-import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, Param, Post, Put, Query, Res } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { ListUsersQuery } from './queries/list.query';
 import { GetUserByIdQuery } from './queries/getById.query';
 import { AddUserCommand } from './commands/addUser.command';
 import { DeleteUserCommand } from './commands/deleteUser.command';
+import { UpdateUserCommand } from './commands/updateUser.command';
 
 @Controller('api')
 export class UserController {
@@ -66,5 +67,23 @@ export class UserController {
     response.status(HttpStatus.OK).json({
       message: 'User deleted!'
     });
+  }
+
+  @Put('/user/:id')
+  public async updateUser(
+    @Param() param: UpdateUserCommand,
+    @Body() body: UpdateUserCommand,
+    @Res() response
+  ) {
+    console.log('param: ',param)
+    console.log('body: ',body)
+
+    const user = await this.commandBus.execute(
+      new UpdateUserCommand(param.id, body.firstName, body.lastName, body.email, body.phone)
+    )
+
+    response.status(HttpStatus.OK).json({
+      message: 'User updated!'
+    })
   }
 }

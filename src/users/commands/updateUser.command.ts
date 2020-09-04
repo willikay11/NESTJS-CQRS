@@ -1,8 +1,8 @@
 import { CommandHandler, IQueryHandler } from '@nestjs/cqrs';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from '../entities/user.entity';
 import { NotFoundException } from '@nestjs/common';
+import { UsersService } from '../users.service';
 
 export class UpdateUserCommand {
   constructor(
@@ -16,12 +16,11 @@ export class UpdateUserCommand {
 export class UpdateUserHandler implements IQueryHandler<UpdateUserCommand>
 {
   constructor(
-    @InjectRepository(Users)
-    private readonly _repository: Repository<Users>
-  ) { }
+    private usersService: UsersService
+  ) {}
   public async execute(request: UpdateUserCommand): Promise<Users>
   {
-    const user = await this._repository.findOne(request.id);
+    const user = await this.usersService.findOne(request.id);
     if (!user)
     throw new NotFoundException('User does not exist');
 
@@ -30,6 +29,6 @@ export class UpdateUserHandler implements IQueryHandler<UpdateUserCommand>
     user.email = request.email || user.email;
     user.phone = request.phone|| user.phone;
 
-    return await this._repository.save( user );
+    return await this.usersService.create( user );
   }
 }

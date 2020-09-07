@@ -29,5 +29,6 @@ stages:
         displayName: End_to_end_tests
         steps:
         - script: |
+            yarn
             yarn test
           displayName: 'yarn test'

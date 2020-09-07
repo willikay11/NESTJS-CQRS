@@ -38,7 +38,7 @@ stages:
         displayName: Deploy to staging environment
         pool:
           vmImage: 'Ubuntu-latest'
-        environment: 'staging'
+        environment: 'Staging'
         strategy:
           runOnce:
             deploy:

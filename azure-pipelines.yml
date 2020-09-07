@@ -37,15 +37,40 @@ stages:
             yarn
             yarn test
           displayName: 'yarn test'
-  # - stage: deploy
-  #   jobs:
-  #     - deployment: DeployStaging
-  #       displayName: Deploy to staging environment
-  #       pool:
-  #         vmImage: 'Ubuntu-latest'
-  #       environment: 'Staging'
-  #       strategy:
-  #         runOnce:
-  #           deploy:
-  #             steps:
-  #             - script: mkdir nestJS-Service
+  - stage: deploy
+    jobs:
+      - deployment: DeployStaging
+        displayName: Deploy to staging environment
+        pool:
+          vmImage: 'Ubuntu-latest'
+        environment: 'Staging'
+        strategy:
+          rolling:
+            maxParallel: 2
+            preDeploy:
+              steps:
+              - download: current
+                artifact: drop
+              - script: echo initialize, cleanup, backup, install certs
+            deploy:
+              steps:
+              - task: Bash@3
+                inputs:
+                  targetType: 'inline'
+                  script: |
+                    # Modify deployment script based on the app type
+                    echo "Starting deployment script run"
+                    sudo java -jar '$(Pipeline.Workspace)/drop/**/target/*.jar'
+            routeTraffic:
+              steps:
+              - script: echo routing traffic
+            postRouteTraffic:
+              steps:
+              - script: echo health check post-route traffic
+            on:
+              failure:
+                steps:
+                - script: echo Restore from backup! This is on failure
+              success:
+                steps:
+                - script: echo Notify! This is on success

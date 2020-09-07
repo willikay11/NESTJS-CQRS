@@ -23,3 +23,11 @@ stages:
             yarn
             yarn build
           displayName: 'yarn install and build'
+  - stage: run_tests
+    jobs:
+      - job: e2e
+        displayName: End_to_end_tests
+        steps:
+        - script: |
+            yarn test
+          displayName: 'yarn test'

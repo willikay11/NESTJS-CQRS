@@ -32,3 +32,15 @@ stages:
             yarn
             yarn test
           displayName: 'yarn test'
+  - stage: deploy
+    jobs:
+      - deployment: DeployStaging
+        displayName: Deploy to staging environment
+        pool:
+          vmImage: 'Ubuntu-latest'
+        environment: 'staging'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+              - script: echo Hello world

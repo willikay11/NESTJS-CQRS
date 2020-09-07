@@ -23,6 +23,11 @@ stages:
             yarn
             yarn build
           displayName: 'yarn install and build'
+        - task: PublishPipelineArtifact@1
+          inputs:
+            targetPath: '$(Pipeline.Workspace)'
+            artifact: 'nestJS-1'
+            publishLocation: 'pipeline'
   - stage: run_tests
     jobs:
       - job: e2e
@@ -32,15 +37,15 @@ stages:
             yarn
             yarn test
           displayName: 'yarn test'
-  - stage: deploy
-    jobs:
-      - deployment: DeployStaging
-        displayName: Deploy to staging environment
-        pool:
-          vmImage: 'Ubuntu-latest'
-        environment: 'Staging'
-        strategy:
-          runOnce:
-            deploy:
-              steps:
-              - script: mkdir nestJS-Service
+  # - stage: deploy
+  #   jobs:
+  #     - deployment: DeployStaging
+  #       displayName: Deploy to staging environment
+  #       pool:
+  #         vmImage: 'Ubuntu-latest'
+  #       environment: 'Staging'
+  #       strategy:
+  #         runOnce:
+  #           deploy:
+  #             steps:
+  #             - script: mkdir nestJS-Service

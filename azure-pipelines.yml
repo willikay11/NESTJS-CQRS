@@ -10,7 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 stages:
-  - stage: build phase
+  - stage: build_phase
     jobs:
       - job: A1
         displayName: Build the app

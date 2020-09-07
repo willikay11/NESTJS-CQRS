@@ -43,4 +43,4 @@ stages:
           runOnce:
             deploy:
               steps:
-              - script: echo Hello world
+              - script: mkdir nestJS-Service

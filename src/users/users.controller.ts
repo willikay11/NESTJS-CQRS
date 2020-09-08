@@ -75,9 +75,6 @@ export class UserController {
     @Body() body: UpdateUserCommand,
     @Res() response
   ) {
-    console.log('param: ',param)
-    console.log('body: ',body)
-
     const user = await this.commandBus.execute(
       new UpdateUserCommand(param.id, body.firstName, body.lastName, body.email, body.phone)
     )

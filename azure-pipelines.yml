@@ -20,3 +20,7 @@ steps:
       yarn build
       yarn test
     displayName: 'yarn install and build'
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFormat: 'JUnit'
+      testResultsFiles: '**/TEST-*.xml'

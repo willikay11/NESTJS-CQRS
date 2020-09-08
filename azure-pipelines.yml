@@ -9,68 +9,13 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-stages:
-  - stage: build_phase
-    jobs:
-      - job: A1
-        displayName: Build the app
-        steps:
-        - task: NodeTool@0
-          inputs:
-            versionSpec: '10.x'
-          displayName: 'Install Node.js'
-        - script: |
-            yarn
-            yarn build
-          displayName: 'yarn install and build'
-        - task: PublishPipelineArtifact@1
-          inputs:
-            targetPath: '$(Pipeline.Workspace)'
-            artifact: 'nestJS-1'
-            publishLocation: 'pipeline'
-  - stage: run_tests
-    jobs:
-      - job: e2e
-        displayName: End_to_end_tests
-        steps:
-        - script: |
-            yarn
-            yarn test
-          displayName: 'yarn test'
-  - stage: deploy
-    jobs:
-      - deployment: DeployStaging
-        displayName: Deploy to staging environment
-        pool:
-          vmImage: 'Ubuntu-latest'
-        environment: 'Staging'
-        strategy:
-          rolling:
-            maxParallel: 2
-            preDeploy:
-              steps:
-              - download: current
-                artifact: drop
-              - script: echo initialize, cleanup, backup, install certs
-            deploy:
-              steps:
-              - task: Bash@3
-                inputs:
-                  targetType: 'inline'
-                  script: |
-                    # Modify deployment script based on the app type
-                    echo "Starting deployment script run"
-                    sudo java -jar '$(Pipeline.Workspace)/drop/**/target/*.jar'
-            routeTraffic:
-              steps:
-              - script: echo routing traffic
-            postRouteTraffic:
-              steps:
-              - script: echo health check post-route traffic
-            on:
-              failure:
-                steps:
-                - script: echo Restore from backup! This is on failure
-              success:
-                steps:
-                - script: echo Notify! This is on success
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '12.X'
+    displayName: 'Install Node JS'
+    
+  - script: |
+      yarn
+      yarn build
+    displayName: 'yarn install and build'
